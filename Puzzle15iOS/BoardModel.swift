@@ -12,6 +12,7 @@ class BoardModel {
     var time: Int = 0
     var boardArray: [[Int]] = [[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,0]]
     var pause: Bool = false
+    var alreadyWon = false
     
     func getBoard() -> [[Int]] {
         return boardArray
@@ -33,7 +34,18 @@ class BoardModel {
         time = i
     }
     
+    func changeWinStatus() -> Void {
+        alreadyWon = !alreadyWon
+    }
+    
+    func getWinStatus() -> Bool {
+        return alreadyWon
+    }
+    
     func refreshBoard() -> Void {
+        if (alreadyWon) {
+            changeWinStatus()
+        }
         boardArray = [[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,0]]
     }
     
@@ -73,7 +85,7 @@ class BoardModel {
         var x = 0
         var rndFirstX = 3
         var rndFirstY = 3
-        while (x != 250) {
+        while (x != 4) {
             // Int.random(in: 1..<100)
             let rndSecondX = Int.random(in: 0..<4)
             let rndSecondY = Int.random(in: 0..<4)
@@ -84,5 +96,13 @@ class BoardModel {
             }
             x += 1
         }
+    }
+    
+    func checkIfWinner() -> Bool {
+        let boardArrayWin = [[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,0]]
+        if (boardArrayWin == boardArray) {
+            return true
+        }
+        return false
     }
 }

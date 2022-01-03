@@ -26,8 +26,10 @@ class ViewControllerMain: UIViewController {
     @IBOutlet weak var button31: UIButton!
     @IBOutlet weak var button32: UIButton!
     @IBOutlet weak var button33: UIButton!
+    @IBOutlet weak var buttonTextPause: UIButton!
     @IBOutlet weak var textMoves: UILabel!
     @IBOutlet weak var textTime: UILabel!
+    @IBOutlet weak var tempLabel: UILabel!
     
     var ourTimer = Timer()
     var timerIsOn = false
@@ -74,31 +76,90 @@ class ViewControllerMain: UIViewController {
         }
     }
     
+    // MARK: - TimerFunctions
     func StartTimer() -> Void {
         ourTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(ActionTimer), userInfo: nil, repeats: true)
+        buttonTextPause.setTitle("Pause", for: UIControl.State.normal)
+        timerIsOn = true
     }
     
     func PauseTimer() -> Void {
         ourTimer.invalidate()
+        buttonTextPause.setTitle("Unpause", for: UIControl.State.normal)
+        timerIsOn = false
     }
     
     func ResetTimer() -> Void {
         ourTimer.invalidate()
         timeToDisplay = 0
         textTime.text = "Time: \(timeToDisplay)"
+        buttonTextPause.setTitle("Pause", for: UIControl.State.normal)
+        timerIsOn = false
     }
     
     @objc func ActionTimer() {
         timeToDisplay += 1
-        textTime.text = "Time: \(timeToDisplay)"
+        if (timeToDisplay < 60) {
+            textTime.text = "Time: \(timeToDisplay)"
+        } else {
+            if (timeToDisplay % 59 < 10) {
+                textTime.text = "Time: \(((timeToDisplay) - timeToDisplay % 59) / 59):0\(timeToDisplay % 59)"
+            } else {
+                textTime.text = "Time: \(((timeToDisplay) - timeToDisplay % 59) / 59):\(timeToDisplay % 59)"
+            }
+        }
+        
     }
+    
+    // MARK: - WinDialog
+    func showInputDialog() {
+            //Creating UIAlertController and
+            //Setting title and message for the alert dialog
+            let alertController = UIAlertController(title: "You Won!", message: "Enter your name to save results!", preferredStyle: .alert)
+            
+            //the confirm action taking the inputs
+            let confirmAction = UIAlertAction(title: "Enter", style: .default) { (_) in
+                
+                //getting the input values from user
+                let name = alertController.textFields?[0].text
+                
+                self.tempLabel.text = "\(name!) - \(self.movesToDisplay) - \(self.timeToDisplay)"
+                
+            }
+            
+            //the cancel action doing nothing
+            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (_) in }
+            
+            //adding textfields to our dialog box
+            alertController.addTextField { (textField) in
+                textField.placeholder = "Enter Name"
+            }
+            
+            //adding the action to dialogbox
+            alertController.addAction(confirmAction)
+            alertController.addAction(cancelAction)
+            
+            //finally presenting the dialog box
+            self.present(alertController, animated: true, completion: nil)
+        }
     
     @IBAction func newGameClicked(_ sender: UIButton) {
         if (board != nil) {
             board!.shuffleBoard()
             board!.setMoves(i: 0)
             board!.setTime(i: 0)
+            ResetTimer()
             UpdateUI()
+        }
+    }
+    
+    @IBAction func pauseClicked(_ sender: UIButton) {
+        if (!board!.checkIfWinner()) {
+            if (timerIsOn) {
+                PauseTimer()
+            } else {
+                StartTimer()
+            }
         }
     }
     
@@ -166,25 +227,30 @@ class ViewControllerMain: UIViewController {
         print("button33Clicked")
         buttonClicked(x: 3, y: 3)
     }
-    
+    // MARK: - ButtonClicked
     func buttonClicked(x: Int, y: Int) -> Void {
-        if (firstButtonX == nil) {
-            firstButtonX = x
-            firstButtonY = y
-        } else if (firstButtonY != nil) {
-            print("buttonClicked firstButtonX:\(firstButtonX) firstButtonY:\(firstButtonY) x:\(x) y:\(y)")
-            if (!timerIsOn) {
-                timerIsOn = true
-                StartTimer()
-            }
-            board?.makeMove(firstX: firstButtonX!, firstY: firstButtonY!, secondX: x, secondY: y)
-            firstButtonX = nil
-            firstButtonY = nil
+        if (!board!.checkIfWinner()) {
+            if (firstButtonX == nil) {
+                firstButtonX = x
+                firstButtonY = y
+            } else if (firstButtonY != nil) {
+                print("buttonClicked firstButtonX:\(firstButtonX) firstButtonY:\(firstButtonY) x:\(x) y:\(y)")
+                if (!timerIsOn) {
+                    StartTimer()
+                }
+                board!.makeMove(firstX: firstButtonX!, firstY: firstButtonY!, secondX: x, secondY: y)
+                if (board!.checkIfWinner()) {
+                    showInputDialog()
+                    PauseTimer()
+                }
+                firstButtonX = nil
+                firstButtonY = nil
 
-            UpdateUI()
+                UpdateUI()
+            }
         }
-        
     }
+    
     /*
     // MARK: - Navigation
 
