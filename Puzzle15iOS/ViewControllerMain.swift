@@ -8,8 +8,8 @@
 import UIKit
 
 class ViewControllerMain: UIViewController {
-
-
+    
+    
     @IBOutlet weak var button00: UIButton!
     @IBOutlet weak var button01: UIButton!
     @IBOutlet weak var button02: UIButton!
@@ -41,16 +41,64 @@ class ViewControllerMain: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         board = BoardModel()
         if (board != nil) {
             movesToDisplay = board!.getMoves()
             timeToDisplay = board!.getTime()
         }
+        
+        print("viewDidLoad")
+        loadSavedData()
         UpdateUI()
         // Do any additional setup after loading the view.
     }
-
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        print("viewWillDisappear")
+        saveDataBeforeClosing()
+    }
+    
+    func getTime() -> Int {
+        return timeToDisplay
+    }
+    
+    func getTimerStatus() -> Bool {
+        return timerIsOn
+    }
+    
+    func saveDataBeforeClosing() -> Void {
+        let defaults = UserDefaults.standard
+        defaults.set(movesToDisplay, forKey: DefaultKeys.keyMoves)
+        defaults.set(timeToDisplay, forKey: DefaultKeys.keyTime)
+        defaults.set(timerIsOn, forKey: DefaultKeys.keyTimerStatus)
+        
+        let jsonEncoder = JSONEncoder()
+        let jsonData = ((try? jsonEncoder.encode(board)) ?? nil)!
+        defaults.set(jsonData, forKey: DefaultKeys.keyBoardModelJson)
+    }
+    
+    func loadSavedData() -> Void {
+        let defaults = UserDefaults.standard
+        if let stringMoves = defaults.string(forKey: DefaultKeys.keyMoves) {
+            movesToDisplay = (stringMoves as NSString).integerValue
+        }
+        if let stringTime = defaults.string(forKey: DefaultKeys.keyTime) {
+            timeToDisplay = (stringTime as NSString).integerValue
+        }
+        if let stringTimerStatus = defaults.string(forKey: DefaultKeys.keyTimerStatus) {
+            timerIsOn = UserDefaults.standard.bool(forKey: DefaultKeys.keyTimerStatus)
+        }
+        if let jsonBoardModel = defaults.object(forKey: DefaultKeys.keyBoardModelJson) as? Data{
+            let jsonDecoder = JSONDecoder()
+            let boardModel = try? jsonDecoder.decode(BoardModel.self, from: jsonBoardModel)
+            if (boardModel != nil) {
+                board = boardModel
+                StartTimer()
+            }
+        }
+    }
+    
     func UpdateUI() -> Void {
         if (board != nil) {
             movesToDisplay = board!.getMoves()
@@ -113,35 +161,35 @@ class ViewControllerMain: UIViewController {
     
     // MARK: - WinDialog
     func showInputDialog() {
-            //Creating UIAlertController and
-            //Setting title and message for the alert dialog
-            let alertController = UIAlertController(title: "You Won!", message: "Enter your name to save results!", preferredStyle: .alert)
+        //Creating UIAlertController and
+        //Setting title and message for the alert dialog
+        let alertController = UIAlertController(title: "You Won!", message: "Enter your name to save results!", preferredStyle: .alert)
+        
+        //the confirm action taking the inputs
+        let confirmAction = UIAlertAction(title: "Enter", style: .default) { (_) in
             
-            //the confirm action taking the inputs
-            let confirmAction = UIAlertAction(title: "Enter", style: .default) { (_) in
-                
-                //getting the input values from user
-                let name = alertController.textFields?[0].text
-                
-                self.tempLabel.text = "\(name!) - \(self.movesToDisplay) - \(self.timeToDisplay)"
-                
-            }
+            //getting the input values from user
+            let name = alertController.textFields?[0].text
             
-            //the cancel action doing nothing
-            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (_) in }
+            self.tempLabel.text = "\(name!) - \(self.movesToDisplay) - \(self.timeToDisplay)"
             
-            //adding textfields to our dialog box
-            alertController.addTextField { (textField) in
-                textField.placeholder = "Enter Name"
-            }
-            
-            //adding the action to dialogbox
-            alertController.addAction(confirmAction)
-            alertController.addAction(cancelAction)
-            
-            //finally presenting the dialog box
-            self.present(alertController, animated: true, completion: nil)
         }
+        
+        //the cancel action doing nothing
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (_) in }
+        
+        //adding textfields to our dialog box
+        alertController.addTextField { (textField) in
+            textField.placeholder = "Enter Name"
+        }
+        
+        //adding the action to dialogbox
+        alertController.addAction(confirmAction)
+        alertController.addAction(cancelAction)
+        
+        //finally presenting the dialog box
+        self.present(alertController, animated: true, completion: nil)
+    }
     
     @IBAction func newGameClicked(_ sender: UIButton) {
         if (board != nil) {
@@ -245,20 +293,20 @@ class ViewControllerMain: UIViewController {
                 }
                 firstButtonX = nil
                 firstButtonY = nil
-
+                
                 UpdateUI()
             }
         }
     }
     
     /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+     // MARK: - Navigation
+     
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+     // Get the new view controller using segue.destination.
+     // Pass the selected object to the new view controller.
+     }
+     */
+    
 }

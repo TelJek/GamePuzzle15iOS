@@ -7,7 +7,7 @@
 
 import Foundation
 
-class BoardModel {
+class BoardModel: Codable {
     var moves: Int = 0
     var time: Int = 0
     var boardArray: [[Int]] = [[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,0]]
@@ -48,6 +48,18 @@ class BoardModel {
         }
         boardArray = [[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,0]]
     }
+    
+//    func saveDataBeforeClosing() -> Void {
+//        let defaults = UserDefaults.standard
+//        defaults.set(moves, forKey: DefaultKeys.keyMoves)
+//        defaults.set(ViewControllerMain.getTime, forKey: DefaultKeys.keyTime)
+//        defaults.set(ViewControllerMain.getTimerStatus, forKey: DefaultKeys.keyTimerStatus)
+//
+//        let jsonEncoder = JSONEncoder()
+//        let jsonData = ((try? jsonEncoder.encode(self)) ?? nil)!
+//        let json = String(data: jsonData, encoding: String.Encoding.utf16)
+//        defaults.set(json, forKey: DefaultKeys.keyBoardModelJson)
+//    }
     
     func makeMove(firstX: Int, firstY: Int, secondX: Int, secondY: Int) -> Void {
         if (checkCanIMove(firstX: firstX, firstY: firstY, secondX: secondX, secondY: secondY)) {
