@@ -27,10 +27,13 @@ class ViewControllerMain: UIViewController {
     @IBOutlet weak var button32: UIButton!
     @IBOutlet weak var button33: UIButton!
     @IBOutlet weak var textMoves: UILabel!
+    @IBOutlet weak var textTime: UILabel!
     
+    var ourTimer = Timer()
+    var timerIsOn = false
     var board: BoardModel? = nil
-    var movesToOutput: Int = 0
-    var timeToOutput: Int = 0
+    var movesToDisplay: Int = 0
+    var timeToDisplay: Int = 0
     var firstButtonX: Int? = nil
     var firstButtonY: Int? = nil
     
@@ -39,19 +42,18 @@ class ViewControllerMain: UIViewController {
 
         board = BoardModel()
         if (board != nil) {
-            movesToOutput = board!.getMoves()
-            timeToOutput = board!.getTime()
+            movesToDisplay = board!.getMoves()
+            timeToDisplay = board!.getTime()
         }
-        updateUI()
+        UpdateUI()
         // Do any additional setup after loading the view.
     }
 
-    func updateUI() -> Void {
+    func UpdateUI() -> Void {
         if (board != nil) {
-            movesToOutput = board!.getMoves()
-            timeToOutput = board!.getTime()
+            movesToDisplay = board!.getMoves()
             
-            textMoves.text = "Moves: \(movesToOutput)"
+            textMoves.text = "Moves: \(movesToDisplay)"
             
             button00.setTitle("\(board!.getBoard()[0][0])", for: UIControl.State.normal)
             button01.setTitle("\(board!.getBoard()[0][1])", for: UIControl.State.normal)
@@ -72,9 +74,35 @@ class ViewControllerMain: UIViewController {
         }
     }
     
+    func StartTimer() -> Void {
+        ourTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(ActionTimer), userInfo: nil, repeats: true)
+    }
+    
+    func PauseTimer() -> Void {
+        ourTimer.invalidate()
+    }
+    
+    func ResetTimer() -> Void {
+        ourTimer.invalidate()
+        timeToDisplay = 0
+        textTime.text = "Time: \(timeToDisplay)"
+    }
+    
+    @objc func ActionTimer() {
+        timeToDisplay += 1
+        textTime.text = "Time: \(timeToDisplay)"
+    }
+    
+    @IBAction func newGameClicked(_ sender: UIButton) {
+        if (board != nil) {
+            board!.shuffleBoard()
+            board!.setMoves(i: 0)
+            board!.setTime(i: 0)
+            UpdateUI()
+        }
+    }
+    
     @IBAction func button00Clicked(_ sender: UIButton) {
-        // button00.setTitle("-", for: UIControl.State.normal)
-        // updateUI()
         print("button00Clicked")
         buttonClicked(x: 0, y: 0)
     }
@@ -145,11 +173,15 @@ class ViewControllerMain: UIViewController {
             firstButtonY = y
         } else if (firstButtonY != nil) {
             print("buttonClicked firstButtonX:\(firstButtonX) firstButtonY:\(firstButtonY) x:\(x) y:\(y)")
+            if (!timerIsOn) {
+                timerIsOn = true
+                StartTimer()
+            }
             board?.makeMove(firstX: firstButtonX!, firstY: firstButtonY!, secondX: x, secondY: y)
             firstButtonX = nil
             firstButtonY = nil
 
-            updateUI()
+            UpdateUI()
         }
         
     }
