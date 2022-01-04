@@ -6,9 +6,9 @@
 //
 
 import UIKit
+import CoreData
 
 class ViewControllerMain: UIViewController {
-    
     
     @IBOutlet weak var button00: UIButton!
     @IBOutlet weak var button01: UIButton!
@@ -51,6 +51,19 @@ class ViewControllerMain: UIViewController {
         print("viewDidLoad")
         loadSavedData()
         UpdateUI()
+        
+        let leaderboardEntityRepository = LeaderBoardRepository(container: AppDelegate.persistentContainer)
+        do {
+            let data = try leaderboardEntityRepository.all()
+            for entity in data {
+                print(entity.name!)
+                print(entity.moves)
+                print(entity.time)
+            }
+        } catch {
+            print("Error in repo")
+        }
+        
         // Do any additional setup after loading the view.
     }
     
@@ -94,7 +107,11 @@ class ViewControllerMain: UIViewController {
             let boardModel = try? jsonDecoder.decode(BoardModel.self, from: jsonBoardModel)
             if (boardModel != nil) {
                 board = boardModel
-                StartTimer()
+                timeToDisplay = timeToDisplay - 1
+                ActionTimer()
+                if (!board!.checkIfWinner()) {
+                    StartTimer()
+                }
             }
         }
     }
@@ -171,8 +188,9 @@ class ViewControllerMain: UIViewController {
             //getting the input values from user
             let name = alertController.textFields?[0].text
             
-            self.tempLabel.text = "\(name!) - \(self.movesToDisplay) - \(self.timeToDisplay)"
-            
+            let vc = ViewController()
+            vc.viewDidLoad()
+            vc.saveData(name: name!, moves: self.movesToDisplay, time: self.timeToDisplay)
         }
         
         //the cancel action doing nothing

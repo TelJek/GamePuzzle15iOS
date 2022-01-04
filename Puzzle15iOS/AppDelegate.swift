@@ -17,8 +17,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         return true
     }
-
-
     
     // MARK: UISceneSession Lifecycle
 
@@ -63,6 +61,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return container
     }()
 
+    static var persistentContainer: NSPersistentContainer {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { fatalError("Could not convert delegate to AppDelegate") }
+        return appDelegate.persistentContainer
+    }
+    
     // MARK: - Core Data Saving support
 
     func saveContext () {
@@ -77,6 +80,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
             }
         }
+    }
+    
+    func applicationWillTerminate(_ application: UIApplication) {
+        saveContext()
     }
 
 }
