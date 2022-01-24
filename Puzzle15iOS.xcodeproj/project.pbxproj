@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6F05FCA227836F3300AF7508 /* KeysForData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F05FCA127836F3300AF7508 /* KeysForData.swift */; };
+		6F05FCA4278371BA00AF7508 /* AppErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F05FCA3278371BA00AF7508 /* AppErrors.swift */; };
+		6F05FCAF2784988D00AF7508 /* LeaderboardEntity+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F05FCAD2784988D00AF7508 /* LeaderboardEntity+CoreDataClass.swift */; };
+		6F05FCB02784988D00AF7508 /* LeaderboardEntity+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F05FCAE2784988D00AF7508 /* LeaderboardEntity+CoreDataProperties.swift */; };
+		6F05FCB427849C2400AF7508 /* LeaderboardRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F05FCB327849C2400AF7508 /* LeaderboardRepository.swift */; };
 		6F2597B527809EF700B4BA57 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F2597B427809EF700B4BA57 /* AppDelegate.swift */; };
 		6F2597B727809EF700B4BA57 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F2597B627809EF700B4BA57 /* SceneDelegate.swift */; };
 		6F2597B927809EF700B4BA57 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F2597B827809EF700B4BA57 /* ViewController.swift */; };
@@ -20,6 +25,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6F05FCA127836F3300AF7508 /* KeysForData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeysForData.swift; sourceTree = "<group>"; };
+		6F05FCA3278371BA00AF7508 /* AppErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppErrors.swift; sourceTree = "<group>"; };
+		6F05FCAD2784988D00AF7508 /* LeaderboardEntity+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LeaderboardEntity+CoreDataClass.swift"; sourceTree = "<group>"; };
+		6F05FCAE2784988D00AF7508 /* LeaderboardEntity+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LeaderboardEntity+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		6F05FCB327849C2400AF7508 /* LeaderboardRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaderboardRepository.swift; sourceTree = "<group>"; };
 		6F2597B127809EF700B4BA57 /* Puzzle15iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Puzzle15iOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F2597B427809EF700B4BA57 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6F2597B627809EF700B4BA57 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -45,6 +55,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6F05FCB1278498A500AF7508 /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				6F05FCAD2784988D00AF7508 /* LeaderboardEntity+CoreDataClass.swift */,
+				6F05FCAE2784988D00AF7508 /* LeaderboardEntity+CoreDataProperties.swift */,
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		6F05FCB227849C0E00AF7508 /* DAL */ = {
+			isa = PBXGroup;
+			children = (
+				6F05FCB327849C2400AF7508 /* LeaderboardRepository.swift */,
+			);
+			path = DAL;
+			sourceTree = "<group>";
+		};
 		6F2597A827809EF700B4BA57 = {
 			isa = PBXGroup;
 			children = (
@@ -64,6 +91,8 @@
 		6F2597B327809EF700B4BA57 /* Puzzle15iOS */ = {
 			isa = PBXGroup;
 			children = (
+				6F05FCB227849C0E00AF7508 /* DAL */,
+				6F05FCB1278498A500AF7508 /* Domain */,
 				6F2597B427809EF700B4BA57 /* AppDelegate.swift */,
 				6F2597B627809EF700B4BA57 /* SceneDelegate.swift */,
 				6F2597B827809EF700B4BA57 /* ViewController.swift */,
@@ -75,6 +104,8 @@
 				6F2597D32780CB4400B4BA57 /* ViewControllerMain.swift */,
 				6F2597D52780CB5100B4BA57 /* ViewControllerLeaderboards.swift */,
 				6F2597D7278214D000B4BA57 /* BoardModel.swift */,
+				6F05FCA127836F3300AF7508 /* KeysForData.swift */,
+				6F05FCA3278371BA00AF7508 /* AppErrors.swift */,
 			);
 			path = Puzzle15iOS;
 			sourceTree = "<group>";
@@ -151,9 +182,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				6F2597B927809EF700B4BA57 /* ViewController.swift in Sources */,
+				6F05FCA227836F3300AF7508 /* KeysForData.swift in Sources */,
+				6F05FCAF2784988D00AF7508 /* LeaderboardEntity+CoreDataClass.swift in Sources */,
 				6F2597D8278214D000B4BA57 /* BoardModel.swift in Sources */,
+				6F05FCA4278371BA00AF7508 /* AppErrors.swift in Sources */,
 				6F2597B527809EF700B4BA57 /* AppDelegate.swift in Sources */,
 				6F2597B727809EF700B4BA57 /* SceneDelegate.swift in Sources */,
+				6F05FCB427849C2400AF7508 /* LeaderboardRepository.swift in Sources */,
+				6F05FCB02784988D00AF7508 /* LeaderboardEntity+CoreDataProperties.swift in Sources */,
 				6F2597D42780CB4400B4BA57 /* ViewControllerMain.swift in Sources */,
 				6F2597D62780CB5100B4BA57 /* ViewControllerLeaderboards.swift in Sources */,
 				6F2597BF27809EF700B4BA57 /* Puzzle15iOS.xcdatamodeld in Sources */,
